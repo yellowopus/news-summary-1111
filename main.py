@@ -1,7 +1,11 @@
-# Entry for make.fun news-summary-01: writes one 1843-char summary of 11 Nov 2026 world news.
+"""make.fun news-summary-01 entry writer."""
+
 import os
 from pathlib import Path
 
+OUTPUT_DIR_ENV = "MAKEFUN_OUTPUT_DIR"
+DEFAULT_OUTPUT_DIR = "/output"
+ENTRY_FILENAME = "entry.txt"
 
 SUMMARY = (
     "Wednesday's decisive test was whether diplomacy could slow the wars and risks pulling the world apart. In Abu Dhabi, US-brokered Ukraine-Russia talks used a trilateral format: envoys Steve Witkoff, Jared Kushner and Keith Kellogg shuttled between Vladimir Putin's and Volodymyr Zelenskyy's delegations instead of one room. Kyiv's position remained that a ceasefire could not be bought by recognizing occupied Ukrainian territory, and that any settlement required security guarantees and restored sovereignty. The process produced engagement, but not agreement, on land, security or sanctions relief. "
@@ -11,10 +15,14 @@ SUMMARY = (
 )
 
 
+def target_path() -> Path:
+    return Path(os.environ.get(OUTPUT_DIR_ENV, DEFAULT_OUTPUT_DIR)) / ENTRY_FILENAME
+
+
 def write_entry() -> None:
-    output_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-    output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "entry.txt").write_text(SUMMARY, encoding="utf-8")
+    path = target_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(SUMMARY, encoding="utf-8")
 
 
 if __name__ == "__main__":
